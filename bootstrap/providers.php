@@ -19,6 +19,7 @@ return [
     Modules\Admin\User\app\Providers\UserServiceProvider::class,
     Modules\Admin\Coupon\app\Providers\CouponServiceProvider::class,
     Modules\Home\Main\app\Providers\MainServiceProvider::class,
+    Modules\Home\Profile\app\Providers\ProfileServiceProvider::class,
     Modules\Home\Shop\app\Providers\ShopServiceProvider::class,
     Modules\Home\Reservation\app\Providers\ReservationServiceProvider::class,
     Modules\Home\Food\app\Providers\FoodServiceProvider::class,

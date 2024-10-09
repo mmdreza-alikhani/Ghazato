@@ -104,6 +104,14 @@
                                                                 <label for="text">متن پیام:*</label>
                                                                 <textarea class="form-control" id="text" name="text" disabled>{{ $feedback->text }}</textarea>
                                                             </div>
+                                                            <div class="form-group col-12 col-lg-6">
+                                                                <label for="created_at">زمان ایجاد:*</label>
+                                                                <input id="created_at" type="text" value="{{ verta($feedback->created_at) }}" class="form-control" disabled>
+                                                            </div>
+                                                            <div class="form-group col-12 col-lg-6">
+                                                                <label for="updated_at">زمان ایجاد آخرین تغییر:*</label>
+                                                                <input id="updated_at" type="text" value="{{ verta($feedback->updated_at) }}" class="form-control" disabled>
+                                                            </div>
                                                             <div class="form-group col-12 col-lg-12">
                                                                 <label for="response">پاسخ شما:*</label>
                                                                 <textarea class="form-control" id="response" name="response" required>{{ old('response') }}</textarea>

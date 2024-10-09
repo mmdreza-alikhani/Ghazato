@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\File;
  * @method static latest()
  * @method static status()
  * @method static orderBy(string $string, string $string1)
+ * @method static find(mixed $food)
  */
 class Shop extends Model
 {
@@ -49,8 +50,8 @@ class Shop extends Model
             $shop->slug = SlugService::createSlug($shop, 'slug', $shop->title);
         });
 
-        static::deleting(function ($shop) {
-            File::delete(public_path('/uploads/shops/images/'. $shop->primary_image));
+        static::forceDeleting(function ($shop) {
+            File::delete(storage_path('/shops/images/'. $shop->primary_image));
             foreach ($shop->foods as $food) {
                 $food->delete();
             }

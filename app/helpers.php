@@ -4,6 +4,7 @@ use App\Models\Coupon;
 use App\Models\Order;
 use Carbon\Carbon;
 use Hekmatinasser\Verta\Verta;
+use Illuminate\Http\JsonResponse;
 
 function generateFileName($name): string
 {
@@ -26,6 +27,44 @@ function convertToGregorianDate($date): ?string
     $splitedSolarDate = preg_split($pattern, $date);
     $gregorianFormat = Verta::jalaliToGregorian($splitedSolarDate[0],$splitedSolarDate[1],$splitedSolarDate[2]);
     return implode("/" , $gregorianFormat) . " " . $splitedSolarDate[3];
+};
+
+function errorResponse($code, $message = 'Error'): JsonResponse
+{
+
+    return response()->json([
+
+        'status' => 'Error',
+
+        'message' => $message,
+
+        'data' => ""
+
+    ], $code);
+
+};
+
+function successResponse($data,$code,$message = null): JsonResponse
+{
+
+    return response()->json([
+
+        'status' => 'Success',
+
+        'message' => $message,
+
+        'data' => $data
+
+    ], $code);
+
+}
+
+function convertJalaliDateToGregorianDate($date): ?string
+{
+    $pattern = "#[/\s]#";
+    $splitedSolarDate = preg_split($pattern, $date);
+    $gregorianFormat = Verta::jalaliToGregorian($splitedSolarDate[0],$splitedSolarDate[1],$splitedSolarDate[2]);
+    return implode("-" , $gregorianFormat) . " " . '00:00:00';
 }
 
 function removeTimeFromDate($date){

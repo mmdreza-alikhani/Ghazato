@@ -44,6 +44,11 @@
                         <i class="fas fa-angle-right mr-2"></i>نمایش دسته بندی ها
                     </a>
                 </li>
+                <li class="side-item {{ $active_child == 'manageDeletedCategories' ? 'selected' : '' }}">
+                    <a href="{{ route('admin.categories.trash') }}" class="fnt-mxs">
+                        <i class="fas fa-trash mr-2"></i>سطل اشغال
+                    </a>
+                </li>
             </div>
         </ul>
         <ul class="side a-collapse {{ $active_parent == 'ingredients' ? '' : 'short' }}">
@@ -68,6 +73,11 @@
                         <i class="fas fa-angle-right mr-2"></i>نمایش غذا ها
                     </a>
                 </li>
+                <li class="side-item {{ $active_child == 'manageDeletedFoods' ? 'selected' : '' }}">
+                    <a href="{{ route('admin.foods.trash') }}" class="fnt-mxs">
+                        <i class="fas fa-trash mr-2"></i>سطل اشغال
+                    </a>
+                </li>
             </div>
         </ul>
         <ul class="side a-collapse {{ $active_parent == 'shops' ? '' : 'short' }}">
@@ -78,6 +88,11 @@
                 <li class="side-item {{ $active_child == 'manageShops' ? 'selected' : '' }}">
                     <a href="{{ route('admin.shops.index') }}" class="fnt-mxs">
                         <i class="fas fa-angle-right mr-2"></i>نمایش رستوران ها
+                    </a>
+                </li>
+                <li class="side-item {{ $active_child == 'manageDeletedShops' ? 'selected' : '' }}">
+                    <a href="{{ route('admin.shops.trash') }}" class="fnt-mxs">
+                        <i class="fas fa-trash mr-2"></i>سطل اشغال
                     </a>
                 </li>
             </div>
@@ -105,6 +120,11 @@
                         <i class="fas fa-angle-right mr-2"></i>نمایش کد های تخفیف
                     </a>
                 </li>
+                <li class="side-item {{ $active_child == 'manageDeletedCoupons' ? 'selected' : '' }}">
+                    <a href="{{ route('admin.coupons.trash') }}" class="fnt-mxs">
+                        <i class="fas fa-trash mr-2"></i>سطل اشغال
+                    </a>
+                </li>
             </div>
         </ul>
 
@@ -119,6 +139,11 @@
                         <i class="fas fa-angle-right mr-2"></i>نمایش مراسمات
                     </a>
                 </li>
+                <li class="side-item {{ $active_child == 'manageDeletedCeremonies' ? 'selected' : '' }}">
+                    <a href="{{ route('admin.ceremonies.trash') }}" class="fnt-mxs">
+                        <i class="fas fa-trash mr-2"></i>سطل اشغال
+                    </a>
+                </li>
             </div>
         </ul>
         <ul class="side a-collapse {{ $active_parent == 'tables' ? '' : 'short' }}">
@@ -129,6 +154,11 @@
                 <li class="side-item {{ $active_child == 'manageTables' ? 'selected' : '' }}">
                     <a href="{{ route('admin.tables.index') }}" class="fnt-mxs">
                         <i class="fas fa-angle-right mr-2"></i>نمایش میز ها
+                    </a>
+                </li>
+                <li class="side-item {{ $active_child == 'manageDeletedTables' ? 'selected' : '' }}">
+                    <a href="{{ route('admin.tables.trash') }}" class="fnt-mxs">
+                        <i class="fas fa-trash mr-2"></i>سطل اشغال
                     </a>
                 </li>
             </div>
@@ -195,6 +225,11 @@
                 <li class="side-item {{ $active_child == 'manageBanners' ? 'selected' : '' }}">
                     <a href="{{ route('admin.banners.index') }}" class="fnt-mxs">
                         <i class="fas fa-angle-right mr-2"></i>نمایش بنر ها
+                    </a>
+                </li>
+                <li class="side-item {{ $active_child == 'manageDeletedBanners' ? 'selected' : '' }}">
+                    <a href="{{ route('admin.banners.trash') }}" class="fnt-mxs">
+                        <i class="fas fa-trash mr-2"></i>سطل اشغال
                     </a>
                 </li>
             </div>

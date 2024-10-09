@@ -8,7 +8,7 @@
         <div class="container">
             <div class="row justify-content-between align-content-center">
                 <div class="col-md-auto">
-                    <h3>حساب کاربری من</h3>
+                    <h3 class="text-white text-right">حساب کاربری من</h3>
                 </div>
                 <div class="col-md-auto">
                     <ul class="au-breadcrumb">

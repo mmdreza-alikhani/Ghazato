@@ -39,6 +39,10 @@
                             <i class="fa fa-plus"></i>
                             افزودن کد  تخفیف جدید
                         </button>
+                        <a href="{{ route('admin.coupons.trash') }}" class="btn btn-outline-secondary" style="max-width: fit-content">
+                            <i class="fa fa-trash"></i>
+                            سطل آشغال
+                        </a>
                     </div>
                     <div>
                         <form action="{{ route('admin.foods.search') }}" method="GET">
@@ -215,7 +219,7 @@
                                                         </div>
                                                         <div class="form-group col-12 col-lg-4">
                                                             <label for="amount">مبلغ:*</label>
-                                                            <input type="text" id="amount" class="form-control" value="{{ $coupon->amount }}" disabled>
+                                                            <input type="text" id="amount" class="form-control" value="{{ number_format($coupon->amount) }}" disabled>
                                                         </div>
                                                         <div class="form-group col-12 col-lg-4">
                                                             <label for="percentage">درصد:*</label>
@@ -223,7 +227,7 @@
                                                         </div>
                                                         <div class="form-group col-12 col-lg-4">
                                                             <label for="max_percentage_amount">حداکثر مبلغ برای نوع درصدی:*</label>
-                                                            <input type="number" id="max_percentage_amount" class="form-control" value="{{ $coupon->max_percentage_amount }}" disabled>
+                                                            <input type="number" id="max_percentage_amount" class="form-control" value="{{ number_format($coupon->max_percentage_amount) }}" disabled>
                                                         </div>
                                                         <div class="form-group col-12 col-lg-4">
                                                             <label for="expired_at">تاریخ انقضا:*</label>
@@ -240,6 +244,14 @@
                                                         <div class="form-group col-12 col-lg-12">
                                                             <label for="description">توضیحات:*</label>
                                                             <textarea type="text" id="description" class="form-control" disabled>{{ $coupon->description }}</textarea>
+                                                        </div>
+                                                        <div class="form-group col-12 col-lg-6">
+                                                            <label for="created_at">زمان ایجاد:*</label>
+                                                            <input id="created_at" type="text" value="{{ verta($coupon->created_at) }}" class="form-control" disabled>
+                                                        </div>
+                                                        <div class="form-group col-12 col-lg-6">
+                                                            <label for="updated_at">زمان ایجاد آخرین تغییر:*</label>
+                                                            <input id="updated_at" type="text" value="{{ verta($coupon->updated_at) }}" class="form-control" disabled>
                                                         </div>
                                                     </div>
                                                 </div>

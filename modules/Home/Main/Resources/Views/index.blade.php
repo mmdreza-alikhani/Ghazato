@@ -224,7 +224,7 @@
                             </div>
                             <div class="body">
                                 @foreach($category->foods as $food)
-                                    <div class="menu-item">
+                                <div class="menu-item">
                                     <h5>
                                         <a href="shop-single.html">{{ $food->title }}</a>
                                         <span class="dots"></span>

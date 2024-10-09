@@ -142,7 +142,7 @@
                                                         </div>
                                                         <div class="form-group col-12 col-lg-4">
                                                             <label for="paying_price">قیمت پرداختی:*</label>
-                                                            <input id="paying_price" type="tel" value="{{ $reservation->paying_price }}" class="form-control" disabled>
+                                                            <input id="paying_price" type="tel" value="{{ number_format($reservation->paying_price) }}" class="form-control" disabled>
                                                         </div>
                                                         <div class="form-group col-12 col-lg-4">
                                                             <label for="status">وضعیت:*</label>
@@ -158,6 +158,14 @@
                                                         <div class="form-group col-12 col-lg-6">
                                                             <label for="end_time">زمان پایان:*</label>
                                                             <input id="end_time" type="text" value="{{ $reservation->end_time }}" class="form-control" disabled>
+                                                        </div>
+                                                        <div class="form-group col-12 col-lg-6">
+                                                            <label for="created_at">زمان ایجاد:*</label>
+                                                            <input id="created_at" type="text" value="{{ verta($reservation->created_at) }}" class="form-control" disabled>
+                                                        </div>
+                                                        <div class="form-group col-12 col-lg-6">
+                                                            <label for="updated_at">زمان ایجاد آخرین تغییر:*</label>
+                                                            <input id="updated_at" type="text" value="{{ verta($reservation->updated_at) }}" class="form-control" disabled>
                                                         </div>
                                                     </div>
                                                 </div>

@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static create(array $array)
  * @method static latest()
  * @method static whereDoesntHave(string $string, \Closure $param)
+ * @method static find(mixed $coupon)
  */
 class Table extends Model
 {

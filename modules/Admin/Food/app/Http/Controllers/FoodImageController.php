@@ -15,12 +15,12 @@ class FoodImageController extends Controller
     public function upload($primary_image , $other_images)
     {
         $primaryImageFileName = generateFileName($primary_image->getClientOriginalName());
-        $primary_image->move(public_path(env('FOOD_IMAGE_UPLOAD_PATH')) , $primaryImageFileName);
+        $primary_image->move(storage_path(env('FOOD_IMAGE_UPLOAD_PATH')) , $primaryImageFileName);
 
         $otherImagesFileNames = [];
         foreach ($other_images as $image){
             $otherImagesFileName = generateFileName($image->getClientOriginalName());
-            $image->move(public_path(env('FOOD_IMAGE_UPLOAD_PATH')) , $otherImagesFileName);
+            $image->move(storage_path(env('FOOD_IMAGE_UPLOAD_PATH')) , $otherImagesFileName);
             array_push($otherImagesFileNames , $otherImagesFileName);
         }
 
@@ -39,7 +39,7 @@ class FoodImageController extends Controller
 
         FoodImage::destroy($request->image_id);
 
-        File::delete(public_path('/uploads/foods/images/'. $request->image_name));
+        File::delete(storage_path('/foods/images/'. $request->image_name));
 
         flash()->flash("success", 'تصویر مورد نظر با موفقیت حذف شد!', [], 'موفقیت آمیز');
         return redirect()->back();
@@ -85,7 +85,7 @@ class FoodImageController extends Controller
 
             if ($request->has("primary_image")) {
                 $primaryImageFileName = generateFileName($request->primary_image->getClientOriginalName());
-                $request->primary_image->move(public_path(env('FOOD_IMAGE_UPLOAD_PATH')), $primaryImageFileName);
+                $request->primary_image->move(storage_path(env('FOOD_IMAGE_UPLOAD_PATH')), $primaryImageFileName);
 
                 $food->update([
                     'primary_image' => $primaryImageFileName
@@ -95,7 +95,7 @@ class FoodImageController extends Controller
             if ($request->has("other_imgs")) {
                 foreach ($request->other_images as $otherImage) {
                     $otherImageFileName = generateFileName($otherImage->getClientOriginalName());
-                    $otherImage->move(public_path(env('FOOD_OTHER_IMAGES_UPLOAD_PATH')), $otherImageFileName);
+                    $otherImage->move(storage_path(env('FOOD_OTHER_IMAGES_UPLOAD_PATH')), $otherImageFileName);
                     FoodImage::create([
                         'image' => $otherImageFileName,
                         'product_id' => $food->id

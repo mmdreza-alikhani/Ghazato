@@ -10,9 +10,11 @@ use App\Models\Reservation;
 use App\Models\Shop;
 use App\Models\Table;
 use App\Models\User;
+use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -25,14 +27,13 @@ class ReservationController extends Controller
         return view('Reservation::Views/index', compact('shop','ceremonies' , 'tables'));
     }
 
-    public function reserve(Request $request)
+    public function reserve(Request $request): RedirectResponse
     {
         $request->validateWithBag('createReservation', [
             'ceremony_id' => 'required',
-            'shop_id' => 'required',
             'table_id' => 'required',
             'date' => 'required|date',
-            'paying_price' => 'required|integer',
+//            'paying_price' => 'required|integer',
             'phone_number' => 'required|min:10|max:10',
             'description' => 'required|min:3|max:255'
         ]);
@@ -40,26 +41,24 @@ class ReservationController extends Controller
         try {
             DB::beginTransaction();
 
-            $food = Food::create([
-                'title' => $request->title,
-                'category_id' => $request->category_id,
-                'shop_id' => $request->shop_id,
-                'sku' => $request->sku,
-                'price' => $request->price,
-                'primary_image' => $imagesName['primary_image'],
-                'description' => $request->description,
-                'status' => $request->status,
-                'is_vegan' => $request->is_vegan ? 1 : 0,
-            ]);
-
-            foreach($imagesName['other_images'] as $imageName){
-                FoodImage::create([
-                    'image' => $imageName,
-                    'food_id' => $food->id
+//            $isTableFree = Reservation::where('table_id', '=', $request->table_id)->where('date', '=', convertJalaliDateToGregorianDate($request->date))->get();
+//
+//            if($isTableFree == null){
+                Reservation::create([
+                    'user_id' => 5,
+                    'ceremony_id' => $request->ceremony_id,
+                    'table_id' => $request->table_id,
+                    'shop_id' => $request->shop_id,
+                    'date' => convertJalaliDateToGregorianDate($request->date),
+                    'paying_price' => '800000',
+                    'phone_number' => $request->phone_number,
+                    'description' => $request->description,
+                    'status' => '1',
                 ]);
-            }
-
-            $food->ingredients()->attach($request->ingredient_ids);
+//            }else{
+//                flash()->flash("error", 'زمان انتخابی اشتباه است.', [], 'ناموفق');
+//                return redirect()->back();
+//            }
 
             DB::commit();
         }catch (Exception $ex) {
@@ -68,7 +67,7 @@ class ReservationController extends Controller
             return redirect()->back();
         }
 
-        flash()->flash("success", 'با موفقیت به غذا ها اضافه شد.', [], 'موفقیت آمیز');
+        flash()->flash("success", 'با موفقیت به رزرو ها اضافه شد.', [], 'موفقیت آمیز');
         return redirect()->back();
     }
 }

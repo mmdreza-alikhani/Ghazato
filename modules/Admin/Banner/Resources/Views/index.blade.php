@@ -39,6 +39,16 @@
                             <i class="fa fa-plus"></i>
                             افزودن بنر جدید
                         </button>
+                        <a href="{{ route('admin.banners.trash') }}" class="btn btn-outline-secondary" style="max-width: fit-content">
+                            <i class="fa fa-trash"></i>
+                            سطل آشغال
+                        </a>
+                    </div>
+                    <div>
+                        <form action="{{ route('admin.banners.search') }}" method="GET">
+                            <input type="text" class="form-control" placeholder="جستجو بین بنر ها با عنوان" style="width: 250px" value="{{ request()->has('keyword') ? request()->keyword : '' }}" name="keyword">
+                            <button type="submit" class="d-none"></button>
+                        </form>
                     </div>
                 </div>
 
@@ -258,6 +268,14 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                        <div class="form-group col-12 col-lg-6">
+                                                            <label for="created_at">زمان ایجاد:*</label>
+                                                            <input id="created_at" type="text" value="{{ verta($banner->created_at) }}" class="form-control" disabled>
+                                                        </div>
+                                                        <div class="form-group col-12 col-lg-6">
+                                                            <label for="updated_at">زمان ایجاد آخرین تغییر:*</label>
+                                                            <input id="updated_at" type="text" value="{{ verta($banner->updated_at) }}" class="form-control" disabled>
                                                         </div>
                                                     </div>
                                                 </div>

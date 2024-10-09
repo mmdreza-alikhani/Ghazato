@@ -2,7 +2,6 @@
 
 use App\Models\City;
 use App\Models\Table;
-use Hekmatinasser\Verta\Verta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +23,7 @@ use Modules\Admin\Shop\app\Http\Controllers\ShopController as AdminShopControlle
 use Modules\Admin\User\app\Http\Controllers\UserController as AdminUserController;
 use Modules\Home\Food\app\Http\Controllers\FoodController;
 use Modules\Home\Main\app\Http\Controllers\MainController;
+use Modules\Home\Profile\app\Http\Controllers\ProfileController;
 use Modules\Home\Shop\app\Http\Controllers\ShopController;
 use Modules\Home\Reservation\app\Http\Controllers\ReservationController;
 
@@ -32,12 +32,9 @@ use Modules\Home\Reservation\app\Http\Controllers\ReservationController;
         return City::where('province_id', $request->province_id)->get();
     });
     Route::get('get_available_shop_tables_list', function (Request $request) {
-        $pattern = "#[/\s]#";
-        $splitedSolarDate = preg_split($pattern, $request->date);
-        $gregorianFormat = Verta::jalaliToGregorian($splitedSolarDate[0],$splitedSolarDate[1],$splitedSolarDate[2]);
-        $date = implode("-" , $gregorianFormat) . " " . '00:00:00';
+        $date = $request->date;
         return $freeTables = Table::where('shop_id', $request->shop_id)->whereDoesntHave('reservations', function ($query) use ($date) {
-            $query->where('date', $date);
+            $query->where('date', convertJalaliDateToGregorianDate($date));
         })->get();
     });
 // END:PUBLIC
@@ -50,7 +47,7 @@ Route::prefix('/')->name('home.')->group(function (){
     // END: MAIN
 
     // FEEDBACKS
-    Route::post('send-feedback' , [MainController::class, 'receiveFeedback'])->name('receiveFeedback');
+    Route::post('send-feedback' , [MainController::class, 'receiveFeedback'])->middleware('throttle:3,1')->name('receiveFeedback');
     // END: FEEDBACKS
 
     // SHOPS
@@ -64,15 +61,36 @@ Route::prefix('/')->name('home.')->group(function (){
     });
     // END: SHOPS
 
-    // RESERVATIONS
-    // END: RESERVATIONS
-
     // FOODS
     Route::prefix('foods/')->name('foods.')->group(function (){
         Route::post('comment/{food}', [FoodController::class , 'storeComment'])->name('comments.store');
         Route::get('{food:slug}', [FoodController::class , 'show'])->name('show');
     });
     // END: FOODS
+
+    // PROFILE
+    Route::prefix('profile/')->name('profile.')->group(function (){
+        Route::get('', [ProfileController::class , 'info'])->name('index');
+        Route::get('info',[ProfileController::class , 'info'])->name('info');
+        Route::post('update/{user}',[ProfileController::class , 'update'])->middleware('throttle:3,1')->name('update');
+        Route::get('orders',[ProfileController::class , 'orders'])->name('orders');
+        Route::get('orders/{order}',[ProfileController::class , 'showOrder'])->name('orders.showOrder');
+        Route::get('bookmarks',[ProfileController::class , 'bookmarks'])->name('bookmarks');
+        Route::get('comments',[ProfileController::class , 'comments'])->name('comments');
+        Route::prefix('addresses/')->name('addresses.')->group(function (){
+            Route::get('',[HomeProfileAddressesController::class , 'index'])->name('index');
+            Route::get('create',[HomeProfileAddressesController::class , 'create'])->name('create');
+            Route::post('store',[HomeProfileAddressesController::class , 'store'])->name('store');
+            Route::get('{address}/edit',[HomeProfileAddressesController::class , 'edit'])->name('edit');
+            Route::put('{address}/update',[HomeProfileAddressesController::class , 'update'])->name('update');
+            Route::delete('{address}/delete',[HomeProfileAddressesController::class , 'destroy'])->name('destroy');
+        });
+        Route::get('resetPassword',[ProfileController::class , 'resetPassword'])->name('resetPassword');
+        Route::post('resetPasswordCheck',[ProfileController::class , 'resetPasswordCheck'])->middleware('throttle:3,1')->name('resetPasswordCheck');
+        Route::get('verifyEmail',[ProfileController::class , 'verifyEmail'])->name('verifyEmail');
+        Route::get('logout',[ProfileController::class , 'logout'])->name('logout');
+    });
+    // END: PROFILE
 
 });
 // END: HOME
@@ -90,36 +108,58 @@ Route::prefix('/management/')->name('admin.')->group(function (){
     // END: USERS
 
     // START: CATEGORIES
+    Route::get('categories/trash', [AdminCategoryController::class , 'trash'])->name('categories.trash');
+    Route::delete('categories/{category}/forceDelete', [AdminCategoryController::class , 'forceDelete'])->name('categories.forceDelete');
+    Route::post('categories/{category}/restore', [AdminCategoryController::class , 'restore'])->name('categories.restore');
     Route::resource('categories' , AdminCategoryController::class);
     Route::get('categoriesSearch', [AdminCategoryController::class , 'search'])->name('categories.search');
+    Route::get('categoriesSearchFromTrash', [AdminCategoryController::class , 'searchFromTrash'])->name('categories.searchFromTrash');
     // END: CATEGORIES
 
     // START: INGREDIENTS
+    Route::get('ingredients/trash', [AdminIngredientController::class , 'trash'])->name('ingredients.trash');
     Route::resource('ingredients' , AdminIngredientController::class);
     Route::get('ingredientsSearch', [AdminIngredientController::class , 'search'])->name('ingredients.search');
     // END: INGREDIENTS
 
     // START: FOODS
+    Route::get('foods/trash', [AdminFoodController::class , 'trash'])->name('foods.trash');
+    Route::delete('foods/{food}/forceDelete', [AdminFoodController::class , 'forceDelete'])->name('foods.forceDelete');
+    Route::post('foods/{food}/restore', [AdminFoodController::class , 'restore'])->name('foods.restore');
     Route::resource('foods' , AdminFoodController::class);
     Route::get('foodsSearch', [AdminFoodController::class , 'search'])->name('foods.search');
+    Route::get('foodsSearchFromTrash', [AdminFoodController::class , 'searchFromTrash'])->name('foods.searchFromTrash');
     Route::delete('/foods/{food}/destroy-images', [AdminFoodImageController::class , 'destroy'])->name('foods.images.destroy');
     Route::put('/foods/{food}/set-to-primary', [AdminFoodImageController::class , 'set_primary'])->name('foods.images.set_primary');
     Route::post('/foods/{food}/add-images', [AdminFoodImageController::class , 'add'])->name('foods.images.add');
     // END: FOODS
 
-    // START: INGREDIENTS
+    // START: SHOPS
+    Route::get('shops/trash', [AdminShopController::class , 'trash'])->name('shops.trash');
+    Route::delete('shops/{shop}/forceDelete', [AdminShopController::class , 'forceDelete'])->name('shops.forceDelete');
+    Route::post('shops/{shop}/restore', [AdminShopController::class , 'restore'])->name('shops.restore');
     Route::resource('shops' , AdminShopController::class);
     Route::get('shopsSearch', [AdminShopController::class , 'search'])->name('shops.search');
+    Route::get('shopsSearchFromTrash', [AdminShopController::class , 'searchFromTrash'])->name('shops.searchFromTrash');
     Route::get('{shop}/foods', [AdminShopController::class , 'foods'])->name('shops.foods');
-    // END: INGREDIENTS
+    // END: SHOPS
 
     // START: BANNERS
+    Route::get('banners/trash', [AdminBannerController::class , 'trash'])->name('banners.trash');
+    Route::delete('banners/{banner}/forceDelete', [AdminBannerController::class , 'forceDelete'])->name('banners.forceDelete');
+    Route::post('banners/{banner}/restore', [AdminBannerController::class , 'restore'])->name('banners.restore');
     Route::resource('banners' , AdminBannerController::class);
+    Route::get('bannersSearch', [AdminBannerController::class , 'search'])->name('banners.search');
+    Route::get('bannersSearchFromTrash', [AdminBannerController::class , 'searchFromTrash'])->name('banners.searchFromTrash');
     // END: BANNERS
 
     // START: COUPONS
+    Route::get('coupons/trash', [AdminCouponController::class , 'trash'])->name('coupons.trash');
+    Route::delete('coupons/{coupon}/forceDelete', [AdminCouponController::class , 'forceDelete'])->name('coupons.forceDelete');
+    Route::post('coupons/{coupon}/restore', [AdminCouponController::class , 'restore'])->name('coupons.restore');
     Route::resource('coupons' , AdminCouponController::class);
     Route::get('couponsSearch', [AdminCouponController::class , 'search'])->name('coupons.search');
+    Route::get('couponsSearchFromTrash', [AdminCouponController::class , 'searchFromTrash'])->name('coupons.searchFromTrash');
     // END: COUPONS
 
     // START: ORDERS
@@ -128,13 +168,21 @@ Route::prefix('/management/')->name('admin.')->group(function (){
     // END: ORDERS
 
     // START: CEREMONIES
+    Route::get('ceremonies/trash', [AdminCeremonyController::class , 'trash'])->name('ceremonies.trash');
+    Route::delete('ceremonies/{ceremony}/forceDelete', [AdminCeremonyController::class , 'forceDelete'])->name('ceremonies.forceDelete');
+    Route::post('ceremonies/{ceremony}/restore', [AdminCeremonyController::class , 'restore'])->name('ceremonies.restore');
     Route::resource('ceremonies' , AdminCeremonyController::class);
     Route::get('ceremoniesSearch', [AdminCeremonyController::class , 'search'])->name('ceremonies.search');
+    Route::get('ceremoniesSearchFromTrash', [AdminCeremonyController::class , 'searchFromTrash'])->name('ceremonies.searchFromTrash');
     // END: CEREMONIES
 
     // START: TABLES
+    Route::get('tables/trash', [AdminTableController::class , 'trash'])->name('tables.trash');
+    Route::delete('tables/{table}/forceDelete', [AdminTableController::class , 'forceDelete'])->name('tables.forceDelete');
+    Route::post('tables/{table}/restore', [AdminTableController::class , 'restore'])->name('tables.restore');
     Route::resource('tables' , AdminTableController::class);
     Route::get('tablesSearch', [AdminTableController::class , 'search'])->name('tables.search');
+    Route::get('tablesSearchFromTrash', [AdminTableController::class , 'searchFromTrash'])->name('tables.searchFromTrash');
     // END: TABLES
 
     // START: RESERVATIONS

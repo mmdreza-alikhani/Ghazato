@@ -39,7 +39,7 @@ class BannerController
             DB::beginTransaction();
 
             $imageName = generateFileName($request->image->getClientOriginalName());
-            $request->image->move(public_path(env('BANNER_IMAGE_UPLOAD_PATH')), $imageName);
+            $request->image->move(storage_path(env('BANNER_IMAGE_UPLOAD_PATH')), $imageName);
 
             Banner::create([
                 'title' => $request->title,
@@ -86,9 +86,9 @@ class BannerController
             DB::beginTransaction();
 
             if ($request->image) {
-                File::delete(public_path('/uploads/banners/images/'. $banner->image));
+                File::delete(storage_path('/banners/images/'. $banner->image));
                 $imageName = generateFileName($request->image->getClientOriginalName());
-                $request->image->move(public_path(env('BANNER_IMAGE_UPLOAD_PATH')), $imageName);
+                $request->image->move(storage_path(env('BANNER_IMAGE_UPLOAD_PATH')), $imageName);
             }
 
             $banner->update([
@@ -116,9 +116,51 @@ class BannerController
 
     public function destroy(Request $request): RedirectResponse
     {
+        Banner::find($request->banner)->update(['status' => 0]);
         Banner::destroy($request->banner);
-
         flash()->flash("success", 'بنر مورد نظر با موفقیت حذف شد!', [], 'موفقیت آمیز');
+        return redirect()->back();
+    }
+
+    public function search(): View|Factory|Application
+    {
+        $keyword = request()->keyword;
+        if (request()->has('keyword') && trim($keyword) != ''){
+            $banners = Banner::where('title', 'LIKE', '%'.trim($keyword).'%')->latest()->paginate(10);
+        }else{
+            $banners = Banner::latest()->paginate(10);
+        }
+        return view('AdminBanner::Views/index' , compact('banners'));
+    }
+
+    public function searchFromTrash(): View|Factory|Application
+    {
+        $keyword = request()->keyword;
+        if (request()->has('keyword') && trim($keyword) != ''){
+            $banners = Banner::onlyTrashed()->where('title', 'LIKE', '%'.trim($keyword).'%')->latest()->paginate(10);
+        }else{
+            $banners = Banner::onlyTrashed()->latest()->paginate(10);
+        }
+        return view('AdminBanner::Views/trash' , compact('banners'));
+    }
+
+    public function trash(): View|Factory|Application
+    {
+        $banners = Banner::onlyTrashed()->orderBy('status', 'desc')->paginate(10);
+        return view('AdminBanner::Views/trash', compact('banners'));
+    }
+
+    public function forceDelete(Request $request): RedirectResponse
+    {
+        Banner::onlyTrashed()->find($request->banner)->forceDelete();
+        flash()->flash("success", 'بنر مورد نظر با موفقیت کامل حذف شد!', [], 'موفقیت آمیز');
+        return redirect()->back();
+    }
+
+    public function restore(Request $request): RedirectResponse
+    {
+        Banner::onlyTrashed()->find($request->banner)->restore();
+        flash()->flash("success", 'بنر مورد نظر با موفقیت بازگردانی حذف شد!', [], 'موفقیت آمیز');
         return redirect()->back();
     }
 }

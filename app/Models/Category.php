@@ -49,7 +49,7 @@ class Category extends Model
             $category->slug = SlugService::createSlug($category, 'slug', $category->title);
         });
 
-        static::deleting(function ($category) {
+        static::forceDeleting(function ($category) {
             foreach ($category->foods as $food){
                 $food->delete();
             }

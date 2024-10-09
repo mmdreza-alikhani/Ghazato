@@ -33,10 +33,24 @@
             </div>
 
             <div class="jumbotron shade pt-5">
-                <button type="button" data-target="#newCategoryModal" data-toggle="modal" class="btn btn-outline-primary" style="max-width: fit-content">
-                    <i class="fa fa-plus"></i>
-                    افزودن دسته بندی جدید
-                </button>
+                <div class="row mx-1">
+                    <div>
+                        <button type="button" data-target="#newCategoryModal" data-toggle="modal" class="btn btn-outline-primary" style="max-width: fit-content">
+                            <i class="fa fa-plus"></i>
+                            افزودن دسته بندی جدید
+                        </button>
+                        <a href="{{ route('admin.categories.trash') }}" class="btn btn-outline-secondary" style="max-width: fit-content">
+                            <i class="fa fa-trash"></i>
+                            سطل آشغال
+                        </a>
+                    </div>
+                    <div>
+                        <form action="{{ route('admin.categories.search') }}" method="GET">
+                            <input type="text" class="form-control" placeholder="جستجو بین دسته بندی ها با عنوان" style="width: 250px" value="{{ request()->has('keyword') ? request()->keyword : '' }}" name="keyword">
+                            <button type="submit" class="d-none"></button>
+                        </form>
+                    </div>
+                </div>
 
                 <div class="modal w-lg fade light blur" id="newCategoryModal" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">
@@ -179,6 +193,14 @@
                                                             <div class="form-group col-12 col-lg-4">
                                                                 <label for="icon">آیکون:*</label>
                                                                 <input id="icon" name="icon" type="text" value="{{ $category->icon }}" class="form-control" required>
+                                                            </div>
+                                                            <div class="form-group col-12 col-lg-6">
+                                                                <label for="created_at">زمان ایجاد:*</label>
+                                                                <input id="created_at" type="text" value="{{ verta($category->created_at) }}" class="form-control" disabled>
+                                                            </div>
+                                                            <div class="form-group col-12 col-lg-6">
+                                                                <label for="updated_at">زمان ایجاد آخرین تغییر:*</label>
+                                                                <input id="updated_at" type="text" value="{{ verta($category->updated_at) }}" class="form-control" disabled>
                                                             </div>
                                                         </div>
                                                 </div>

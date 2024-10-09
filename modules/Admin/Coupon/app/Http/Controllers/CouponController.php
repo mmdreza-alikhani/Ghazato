@@ -113,8 +113,8 @@ class CouponController
 
     public function destroy(Request $request): RedirectResponse
     {
+        Coupon::find($request->coupon)->update(['status' => 0]);
         Coupon::destroy($request->coupon);
-
         flash()->flash("success", 'کد تخفیف مورد نظر با موفقیت حذف شد!', [], 'موفقیت آمیز');
         return redirect()->back();
     }
@@ -123,11 +123,41 @@ class CouponController
     {
         $keyword = request()->keyword;
         if (request()->has('keyword') && trim($keyword) != ''){
-            $coupons = Coupon::where('title', 'like', '%' . $keyword . '%')->latest()->paginate(10);
+            $coupons = Coupon::where('title', 'LIKE', '%'.trim($keyword).'%')->latest()->paginate(10);
         }else{
             $coupons = Coupon::latest()->paginate(10);
         }
-        $shops = Shop::where('status' , '=' , '1')->get();
-        return view('AdminCoupon::Views/index' , compact('coupons', 'shops'));
+        return view('AdminCoupon::Views/index' , compact('coupons'));
+    }
+
+    public function searchFromTrash(): View|Factory|Application
+    {
+        $keyword = request()->keyword;
+        if (request()->has('keyword') && trim($keyword) != ''){
+            $coupons = Coupon::onlyTrashed()->where('title', 'LIKE', '%'.trim($keyword).'%')->latest()->paginate(10);
+        }else{
+            $coupons = Coupon::onlyTrashed()->latest()->paginate(10);
+        }
+        return view('AdminCoupon::Views/trash' , compact('coupons'));
+    }
+
+    public function trash(): View|Factory|Application
+    {
+        $coupons = Coupon::onlyTrashed()->orderBy('status', 'desc')->paginate(10);
+        return view('AdminCoupon::Views/trash', compact('coupons'));
+    }
+
+    public function forceDelete(Request $request): RedirectResponse
+    {
+        Coupon::onlyTrashed()->find($request->coupon)->forceDelete();
+        flash()->flash("success", 'کد تخفیف مورد نظر با موفقیت کامل حذف شد!', [], 'موفقیت آمیز');
+        return redirect()->back();
+    }
+
+    public function restore(Request $request): RedirectResponse
+    {
+        Coupon::onlyTrashed()->find($request->coupon)->restore();
+        flash()->flash("success", 'کد تخفیف مورد نظر با موفقیت بازگردانی حذف شد!', [], 'موفقیت آمیز');
+        return redirect()->back();
     }
 }

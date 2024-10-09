@@ -46,7 +46,7 @@
         <div class="right">
             <div class="action">
                 <div class="notify">
-                    <img src="/home/images/notify.png" alt="">
+                    <img style="color: #FFF" height="20" src="/home/images/cart.jpg" alt="">
                     <span class="notify-amount">0</span>
 
                     <!-- WIDGET SHOPPING -->

@@ -66,8 +66,8 @@ class CeremonyController
 
     public function destroy(Request $request): RedirectResponse
     {
+        Ceremony::find($request->ceremony)->update(['status' => 0]);
         Ceremony::destroy($request->ceremony);
-
         flash()->flash("success", 'مراسم مورد نظر با موفقیت حذف شد!', [], 'موفقیت آمیز');
         return redirect()->back();
     }
@@ -81,5 +81,36 @@ class CeremonyController
             $ceremonies = Ceremony::latest()->paginate(10);
         }
         return view('AdminCeremony::Views/index' , compact('ceremonies'));
+    }
+
+    public function searchFromTrash(): View|Factory|Application
+    {
+        $keyword = request()->keyword;
+        if (request()->has('keyword') && trim($keyword) != ''){
+            $ceremonies = Ceremony::onlyTrashed()->where('title', 'LIKE', '%'.trim($keyword).'%')->latest()->paginate(10);
+        }else{
+            $ceremonies = Ceremony::onlyTrashed()->latest()->paginate(10);
+        }
+        return view('AdminCeremony::Views/trash' , compact('ceremonies'));
+    }
+
+    public function trash(): View|Factory|Application
+    {
+        $ceremonies = Ceremony::onlyTrashed()->orderBy('status', 'desc')->paginate(10);
+        return view('AdminCeremony::Views/trash', compact('ceremonies'));
+    }
+
+    public function forceDelete(Request $request): RedirectResponse
+    {
+        Ceremony::onlyTrashed()->find($request->ceremony)->forceDelete();
+        flash()->flash("success", 'مراسم مورد نظر با موفقیت کامل حذف شد!', [], 'موفقیت آمیز');
+        return redirect()->back();
+    }
+
+    public function restore(Request $request): RedirectResponse
+    {
+        Ceremony::onlyTrashed()->find($request->ceremony)->restore();
+        flash()->flash("success", 'مراسم مورد نظر با موفقیت بازگردانی حذف شد!', [], 'موفقیت آمیز');
+        return redirect()->back();
     }
 }

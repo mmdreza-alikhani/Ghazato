@@ -53,7 +53,7 @@ class ShopController
             DB::beginTransaction();
 
             $imageName = generateFileName($request->primary_image->getClientOriginalName());
-            $request->primary_image->move(public_path(env('SHOP_IMAGE_UPLOAD_PATH')), $imageName);
+            $request->primary_image->move(storage_path(env('SHOP_IMAGE_UPLOAD_PATH')), $imageName);
 
             Shop::create([
                 'title' => $request->title,
@@ -104,9 +104,9 @@ class ShopController
             DB::beginTransaction();
 
             if ($request->primary_image) {
-                File::delete(public_path('/uploads/shops/images/'. $shop->primary_image));
+                File::delete(storage_path('/shops/images/'. $shop->primary_image));
                 $imageName = generateFileName($request->primary_image->getClientOriginalName());
-                $request->primary_image->move(public_path(env('SHOP_IMAGE_UPLOAD_PATH')), $imageName);
+                $request->primary_image->move(storage_path(env('SHOP_IMAGE_UPLOAD_PATH')), $imageName);
             }
 
             $shop->update([
@@ -136,9 +136,9 @@ class ShopController
 
     public function destroy(Request $request): RedirectResponse
     {
+        Shop::find($request->shop)->update(['status' => 0]);
         Shop::destroy($request->shop);
-
-        flash()->flash("success", 'رستوران مورد نظر با موفقیت حذف شد!', [], 'موفقیت آمیز');
+        flash()->flash("success", 'فروشگاه مورد نظر با موفقیت حذف شد!', [], 'موفقیت آمیز');
         return redirect()->back();
     }
 
@@ -146,22 +146,41 @@ class ShopController
     {
         $keyword = request()->keyword;
         if (request()->has('keyword') && trim($keyword) != ''){
-            $shops = Shop::where('title', 'like', '%' . $keyword . '%')->latest()->paginate(10);
+            $shops = Shop::where('title', 'LIKE', '%'.trim($keyword).'%')->latest()->paginate(10);
         }else{
             $shops = Shop::latest()->paginate(10);
         }
-        $users = User::status()->get();
-        $cities = City::all();
-        $provinces = Province::all();
-        $coupons = Coupon::all();
-        return view('AdminShop::Views/index' , compact('shops', 'provinces', 'users', 'cities', 'coupons'));
+        return view('AdminShop::Views/index' , compact('shops'));
     }
 
-    public function foods(Shop $shop): View|Factory|Application
+    public function searchFromTrash(): View|Factory|Application
     {
-        $foods = Food::where('shop_id', '=', $shop->id)->latest()->paginate(10);
-        $ingredients = Ingredient::all();
-        $categories = Category::status()->get();
-        return view('AdminShop::Views/foods' , compact('foods', 'ingredients', 'categories', 'shop'));
+        $keyword = request()->keyword;
+        if (request()->has('keyword') && trim($keyword) != ''){
+            $shops = Shop::onlyTrashed()->where('title', 'LIKE', '%'.trim($keyword).'%')->latest()->paginate(10);
+        }else{
+            $shops = Shop::onlyTrashed()->latest()->paginate(10);
+        }
+        return view('AdminShop::Views/trash' , compact('shops'));
+    }
+
+    public function trash(): View|Factory|Application
+    {
+        $shops = Shop::onlyTrashed()->orderBy('status', 'desc')->paginate(10);
+        return view('AdminShop::Views/trash', compact('shops'));
+    }
+
+    public function forceDelete(Request $request): RedirectResponse
+    {
+        Shop::onlyTrashed()->find($request->shop)->forceDelete();
+        flash()->flash("success", 'فروشگاه مورد نظر با موفقیت کامل حذف شد!', [], 'موفقیت آمیز');
+        return redirect()->back();
+    }
+
+    public function restore(Request $request): RedirectResponse
+    {
+        Shop::onlyTrashed()->find($request->shop)->restore();
+        flash()->flash("success", 'فروشگاه مورد نظر با موفقیت بازگردانی حذف شد!', [], 'موفقیت آمیز');
+        return redirect()->back();
     }
 }

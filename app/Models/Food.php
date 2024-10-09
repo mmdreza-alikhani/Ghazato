@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\File;
  * @method static latest()
  * @method static status()
  * @method static whereHas(string $string, \Closure $param)
+ * @method static find(mixed $category)
  */
 class Food extends Model
 {
@@ -51,11 +52,11 @@ class Food extends Model
         static::creating(function ($food) {
             $food->slug = SlugService::createSlug($food, 'slug', $food->title . '-' . $food->shop->title);
         });
-        static::deleting(function ($food) {
-            File::delete(public_path('/uploads/foods/images/'. $food->primary_image));
+        static::forceDeleting(function ($food) {
+            File::delete(storage_path('/foods/images/'. $food->primary_image));
             foreach ($food->images as $image) {
                 FoodImage::destroy($image->id);
-                File::delete(public_path('/uploads/foods/images/'. $image->image));
+                File::delete(storage_path('/foods/images/'. $image->image));
             }
         });
     }

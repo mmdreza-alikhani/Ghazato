@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\File;
  * @method static where(string $string, string $string1, string $string2)
  * @method static latest()
  * @method static status()
+ * @method static find(mixed $shop)
  */
 class Banner extends Model
 {
@@ -23,8 +24,8 @@ class Banner extends Model
     {
         parent::boot();
 
-        static::deleting(function ($banner) {
-            File::delete(public_path('/uploads/banners/images/'. $banner->image));
+        static::forceDeleting(function ($banner) {
+            File::delete(storage_path('/banners/images/'. $banner->image));
         });
     }
 

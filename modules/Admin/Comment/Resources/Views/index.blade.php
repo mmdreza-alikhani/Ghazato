@@ -108,6 +108,14 @@
                                                                 <textarea class="form-control" id="text" name="text" disabled>{{ $comment->text }}</textarea>
                                                             </div>
                                                         </div>
+                                                        <div class="form-group col-12 col-lg-6">
+                                                            <label for="created_at">زمان ایجاد:*</label>
+                                                            <input id="created_at" type="text" value="{{ verta($comment->created_at) }}" class="form-control" disabled>
+                                                        </div>
+                                                        <div class="form-group col-12 col-lg-6">
+                                                            <label for="updated_at">زمان ایجاد آخرین تغییر:*</label>
+                                                            <input id="updated_at" type="text" value="{{ verta($comment->updated_at) }}" class="form-control" disabled>
+                                                        </div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="submit" class="btn outlined f-main">تایید</button>

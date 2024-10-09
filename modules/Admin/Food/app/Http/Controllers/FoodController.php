@@ -139,8 +139,8 @@ class FoodController
 
     public function destroy(Request $request): RedirectResponse
     {
-        Food::destroy($request->food->id);
-
+        Food::find($request->food)->update(['status' => 0]);
+        Food::destroy($request->food);
         flash()->flash("success", 'غذای مورد نظر با موفقیت حذف شد!', [], 'موفقیت آمیز');
         return redirect()->back();
     }
@@ -149,13 +149,41 @@ class FoodController
     {
         $keyword = request()->keyword;
         if (request()->has('keyword') && trim($keyword) != ''){
-            $foods = Food::where('title', 'like', '%' . $keyword . '%')->orWhere('sku', 'like', '%' . $keyword . '%')->latest()->paginate(10);
+            $foods = Food::where('title', 'LIKE', '%'.trim($keyword).'%')->latest()->paginate(10);
         }else{
             $foods = Food::latest()->paginate(10);
         }
-        $ingredients = Ingredient::all();
-        $categories = Category::status()->get();
-        $shops = Shop::status()->get();
-        return view('AdminFood::Views/index' , compact('foods', 'ingredients', 'categories', 'shops'));
+        return view('AdminFood::Views/index' , compact('foods'));
+    }
+
+    public function searchFromTrash(): View|Factory|Application
+    {
+        $keyword = request()->keyword;
+        if (request()->has('keyword') && trim($keyword) != ''){
+            $foods = Food::onlyTrashed()->where('title', 'LIKE', '%'.trim($keyword).'%')->latest()->paginate(10);
+        }else{
+            $foods = Food::onlyTrashed()->latest()->paginate(10);
+        }
+        return view('AdminFood::Views/trash' , compact('foods'));
+    }
+
+    public function trash(): View|Factory|Application
+    {
+        $foods = Food::onlyTrashed()->orderBy('status', 'desc')->paginate(10);
+        return view('AdminFood::Views/trash', compact('foods'));
+    }
+
+    public function forceDelete(Request $request): RedirectResponse
+    {
+        Food::onlyTrashed()->find($request->food)->forceDelete();
+        flash()->flash("success", 'غذای مورد نظر با موفقیت کامل حذف شد!', [], 'موفقیت آمیز');
+        return redirect()->back();
+    }
+
+    public function restore(Request $request): RedirectResponse
+    {
+        Food::onlyTrashed()->find($request->food)->restore();
+        flash()->flash("success", 'غذای مورد نظر با موفقیت بازگردانی حذف شد!', [], 'موفقیت آمیز');
+        return redirect()->back();
     }
 }

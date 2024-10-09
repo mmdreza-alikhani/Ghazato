@@ -39,6 +39,10 @@
                             <i class="fa fa-plus"></i>
                             افزودن رستوران جدید
                         </button>
+                        <a href="{{ route('admin.shops.trash') }}" class="btn btn-outline-secondary" style="max-width: fit-content">
+                            <i class="fa fa-trash"></i>
+                            سطل آشغال
+                        </a>
                     </div>
                     <div>
                         <form action="{{ route('admin.shops.search') }}" method="GET">
@@ -282,6 +286,9 @@
                                                         <div class="form-group col-12 col-lg-12">
                                                             <h4>کد های تخفیف:</h4>
                                                             <div class="row">
+                                                                @if($shop->coupons->isEmpty())
+                                                                    هیچ کد تخفیفی در دسترس نیست.
+                                                                @endif
                                                                 @foreach($shop->coupons as $coupon)
                                                                     <div class="form-group col-12 col-lg-3">
                                                                         <h6>{{ $coupon->title . ':' }}
@@ -296,7 +303,15 @@
                                                                 @endforeach
                                                             </div>
                                                         </div>
-                                                        <a href="{{ route('admin.shops.foods', ['shop' => $shop]) }}" class="btn outlined c-info">نمایش تمام محصولات</a>
+                                                        <div class="form-group col-12 col-lg-6">
+                                                            <label for="created_at">زمان ایجاد:*</label>
+                                                            <input id="created_at" type="text" value="{{ verta($shop->created_at) }}" class="form-control" disabled>
+                                                        </div>
+                                                        <div class="form-group col-12 col-lg-6">
+                                                            <label for="updated_at">زمان ایجاد آخرین تغییر:*</label>
+                                                            <input id="updated_at" type="text" value="{{ verta($shop->updated_at) }}" class="form-control" disabled>
+                                                        </div>
+                                                        <a href="{{ url('/management/shopsSearch?keyword=' . $shop->title ) }}" class="btn outlined c-main">نمایش تمام محصولات</a>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">

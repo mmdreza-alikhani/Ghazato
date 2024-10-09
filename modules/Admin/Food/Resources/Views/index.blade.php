@@ -39,6 +39,10 @@
                             <i class="fa fa-plus"></i>
                             افزودن غذای جدید
                         </button>
+                        <a href="{{ route('admin.foods.trash') }}" class="btn btn-outline-secondary" style="max-width: fit-content">
+                            <i class="fa fa-trash"></i>
+                            سطل آشغال
+                        </a>
                     </div>
                     <div>
                         <form action="{{ route('admin.foods.search') }}" method="GET">
@@ -259,7 +263,7 @@
                                                         </div>
                                                         <div class="form-group col-12 col-lg-4">
                                                             <label for="price">قیمت(به ریال):*</label>
-                                                            <input id="price" type="tel" value="{{ $food->price }}" class="form-control" disabled>
+                                                            <input id="price" type="tel" value="{{ number_format($food->price) }}" class="form-control" disabled>
                                                         </div>
                                                         <div class="form-group col-12 col-lg-4">
                                                             <label for="status">وضعیت:*</label>
@@ -344,6 +348,14 @@
                                                                     <hr>
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                        <div class="form-group col-12 col-lg-6">
+                                                            <label for="created_at">زمان ایجاد:*</label>
+                                                            <input id="created_at" type="text" value="{{ verta($food->created_at) }}" class="form-control" disabled>
+                                                        </div>
+                                                        <div class="form-group col-12 col-lg-6">
+                                                            <label for="updated_at">زمان ایجاد آخرین تغییر:*</label>
+                                                            <input id="updated_at" type="text" value="{{ verta($food->updated_at) }}" class="form-control" disabled>
                                                         </div>
                                                     </div>
                                                 </div>
