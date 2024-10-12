@@ -1954,13 +1954,15 @@ body.center {
   line-height: 2; }
 
 .our-menu {
-  background: url("../images/our-menu-bg-1.png") left top no-repeat, url("../images/our-menu-bg-2.jpg") right bottom no-repeat, url("../images/our-menu-bg-3.jpg");
-  background-size: auto, auto, cover; }
+    background: url("../images/kitchen.jpg");
+    background-size: cover;
+}
   .our-menu.bg-none {
     background: none; }
   .our-menu.bg-4 {
-    background: url("../images/our-menu-bg-4.jpg");
-    background-size: cover; }
+      background: url("../images/kitchen.jpg");
+      background-size: cover;
+  }
 
 .our-menu-full {
   padding: 0 95px; }
@@ -7204,8 +7206,9 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
     padding-left: 15px; }
 
   .our-menu {
-    background: url("../images/our-menu-bg-1.png") left top no-repeat, url("../images/our-menu-bg-3.jpg");
-    background-size: auto, cover; }
+      background: url("../images/kitchen.jpg");
+      background-size: cover;
+  }
 
   .our-menu-wrapper {
     max-width: 1170px;
@@ -8741,8 +8744,9 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
       margin-bottom: 0; }
 
   .our-menu {
-    background: url("../images/our-menu-bg-3.jpg");
-    background-size: cover; }
+    background: url("../images/kitchen.jpg");
+    background-size: cover;
+  }
 
   .our-menu-col {
     margin-bottom: 50px; }

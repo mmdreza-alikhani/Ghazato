@@ -63,6 +63,11 @@ class Category extends Model
 
     public function foods(): HasMany
     {
-        return $this->hasMany(Food::class);
+        return $this->hasMany(Food::class)->where('shop_id', 1);
+    }
+
+    public function mainFoods(): HasMany
+    {
+        return $this->hasMany(Food::class)->where('shop_id', 1);
     }
 }

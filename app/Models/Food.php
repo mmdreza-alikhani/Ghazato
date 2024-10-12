@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Binafy\LaravelCart\Cartable;
 use Carbon\Carbon;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Cviebrock\EloquentSluggable\Sluggable;
@@ -20,13 +21,19 @@ use Illuminate\Support\Facades\File;
  * @method static status()
  * @method static whereHas(string $string, \Closure $param)
  * @method static find(mixed $category)
+ * @method static findOrFail($food_id)
  */
-class Food extends Model
+class Food extends Model implements Cartable
 {
     use HasFactory, sluggable, SoftDeletes;
 
     protected $table = "foods";
     protected $guarded = [];
+
+    public function getPrice(): float
+    {
+        //
+    }
 
     public function sluggable(): array
     {

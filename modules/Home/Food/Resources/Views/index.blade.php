@@ -4,6 +4,13 @@
     $active = ''
 @endphp
 
+@php
+//    if (auth()->check()){
+//        $cart = \App\Models\Cart::where('user_id', '=', auth()->user()->id)->first();
+//        dd($cart);
+//    }
+@endphp
+
 @section('title', $food->title)
 
 @section('content')
@@ -59,15 +66,17 @@
                                 {{ $food->description }}
                             </p>
                         </div>
-                        <form class="cart" method="post">
+                        <form class="cart" method="post" action="{{ route('home.cart.add') }}">
+                            @csrf
                             <div class="quantity">
-                                <input type="number" class="input-text qty text" min="1" max="10" name="cart" value="1" id="input-quantity">
+                                <input type="hidden" name="food_id" value="{{ $food->id }}">
+                                <input type="number" class="input-text qty text" min="1" max="10" name="quantity" value="1" id="input-quantity">
                                 <div class="icon">
                                     <a href="#" class="number-button plus">+</a>
                                     <a href="#" class="number-button minus">-</a>
                                 </div>
                             </div>
-                            <button type="submit" name="add-to-cart" value="" class="single_add_to_cart_button button alt au-btn round has-bg au-btn--hover">افزودن به سبد خرید</button>
+                            <button type="submit" class="single_add_to_cart_button button alt au-btn round has-bg au-btn--hover">افزودن به سبد خرید</button>
                         </form>
                         <div class="product_meta rtl text-right">
                             <span class="sku_wrapper">شناسه انبار: <span class="sku">{{ $food->sku }}</span></span>

@@ -21,6 +21,7 @@ use Modules\Admin\Main\app\Http\Controllers\MainController as AdminMainControlle
 use Modules\Admin\Setting\app\Http\Controllers\SettingController as AdminSettingController;
 use Modules\Admin\Shop\app\Http\Controllers\ShopController as AdminShopController;
 use Modules\Admin\User\app\Http\Controllers\UserController as AdminUserController;
+use Modules\Home\Cart\app\Http\Controllers\CartController;
 use Modules\Home\Food\app\Http\Controllers\FoodController;
 use Modules\Home\Main\app\Http\Controllers\MainController;
 use Modules\Home\Profile\app\Http\Controllers\ProfileController;
@@ -91,6 +92,12 @@ Route::prefix('/')->name('home.')->group(function (){
         Route::get('logout',[ProfileController::class , 'logout'])->name('logout');
     });
     // END: PROFILE
+
+    // START: CART
+    Route::post('add-to-cart', [CartController::class , 'add'])->name('cart.add');
+    Route::get('remove-from-cart/{rowId}', [CartController::class , 'remove'])->name('cart.remove');
+    Route::get('clear-cart', [CartController::class , 'clear'])->name('cart.clear');
+    // END: CART
 
 });
 // END: HOME

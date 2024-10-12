@@ -1,3 +1,8 @@
+@php
+if (auth()->check()){
+    $cart = \App\Models\Cart::where('user_id', '=', auth()->user()->id)->first();
+}
+@endphp
 <header>
     <!-- HEADER ON DESKTOP -->
     <nav class="navbar-desktop">
@@ -52,37 +57,29 @@
                     <!-- WIDGET SHOPPING -->
                     <div id="woocommerce_widget_cart-2" class="widget woocommerce widget_shopping_cart">
                         <div class="widget_shopping_cart_content">
-                            <ul class="woocommerce-mini-cart cart_list product_list_widget ">
-                                <li class="woocommerce-mini-cart-item mini_cart_item clearfix">
-                                    <a href="#" class="remove remove_from_cart_button" aria-label="Remove this item">
-                                        <span class="lnr lnr-cross-circle"></span>
-                                    </a>
-                                    <a href="#" class="image-holder">
-                                        <img src="/home/images/widget-cart-thumb-1.jpg" class="attachment-shop_thumbnail size-shop_thumbnail wp-post-image" alt="">
-                                        <span class="product-name">Best Brownies</span>
-                                    </a>
-                                    <span class="quantity">
+                            @if($cart)
+                                @foreach($cart->items as $item)
+                                    <li class="woocommerce-mini-cart-item mini_cart_item clearfix">
+                                        <a href="#" class="remove remove_from_cart_button" aria-label="Remove this item">
+                                            <span class="lnr lnr-cross-circle"></span>
+                                        </a>
+                                        <a href="#" class="image-holder">
+                                            <img src="images/widget-cart-thumb-1.jpg" class="attachment-shop_thumbnail size-shop_thumbnail wp-post-image" alt="">
+                                            <span class="product-name">Best Brownies</span>
+                                        </a>
+                                        <span class="quantity">
                                         <span class="woocommerce-Price-amount amount">
                                             <span class="woocommerce-Price-currencySymbol">$</span>18
                                         </span>
                                         x1
                                     </span>
-                                </li>
-                                <li class="woocommerce-mini-cart-item mini_cart_item clearfix">
-                                    <a href="#" class="remove remove_from_cart_button" aria-label="Remove this item">
-                                        <span class="lnr lnr-cross-circle"></span>
-                                    </a>
-                                    <a href="#" class="image-holder">
-                                        <img src="/home/images/widget-cart-thumb-2.jpg" class="attachment-shop_thumbnail size-shop_thumbnail wp-post-image" alt="">
-                                        <span class="product-name">Angela's Awesome</span>
-                                    </a>
-                                    <span class="quantity">
-                                        <span class="woocommerce-Price-amount amount">
-                                            <span class="woocommerce-Price-currencySymbol">$</span>28
-                                        </span>
-                                        x3
-                                    </span>
-                                </li>
+                                    </li>
+                                @endforeach
+                            @else
+                                نداری
+                            @endif
+                            <ul class="woocommerce-mini-cart cart_list product_list_widget ">
+
                             </ul>
                             <p class="woocommerce-mini-cart__total total">
                                 <strong>Subtotal:</strong>
