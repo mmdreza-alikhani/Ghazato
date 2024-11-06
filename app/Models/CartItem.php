@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
-use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class CartItems extends Model
+/**
+ * @method static where(string $string, $id)
+ * @method static create(array $array)
+ */
+class CartItem extends Model
 {
     use HasFactory;
 
@@ -17,6 +20,11 @@ class CartItems extends Model
     public function cart(): BelongsTo
     {
         return $this->belongsTo(Cart::class);
+    }
+
+    public function food(): BelongsTo
+    {
+        return $this->belongsTo(Food::class);
     }
 
 }

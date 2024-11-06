@@ -1,7 +1,5 @@
 @php
-if (auth()->check()){
-    $cart = \App\Models\Cart::where('user_id', '=', auth()->user()->id)->first();
-}
+    $user = auth()->user()
 @endphp
 <header>
     <!-- HEADER ON DESKTOP -->
@@ -52,53 +50,64 @@ if (auth()->check()){
             <div class="action">
                 <div class="notify">
                     <img style="color: #FFF" height="20" src="/home/images/cart.jpg" alt="">
-                    <span class="notify-amount">0</span>
-
-                    <!-- WIDGET SHOPPING -->
-                    <div id="woocommerce_widget_cart-2" class="widget woocommerce widget_shopping_cart">
-                        <div class="widget_shopping_cart_content">
-                            @if($cart)
-                                @foreach($cart->items as $item)
-                                    <li class="woocommerce-mini-cart-item mini_cart_item clearfix">
-                                        <a href="#" class="remove remove_from_cart_button" aria-label="Remove this item">
-                                            <span class="lnr lnr-cross-circle"></span>
-                                        </a>
-                                        <a href="#" class="image-holder">
-                                            <img src="images/widget-cart-thumb-1.jpg" class="attachment-shop_thumbnail size-shop_thumbnail wp-post-image" alt="">
-                                            <span class="product-name">Best Brownies</span>
-                                        </a>
-                                        <span class="quantity">
-                                        <span class="woocommerce-Price-amount amount">
-                                            <span class="woocommerce-Price-currencySymbol">$</span>18
-                                        </span>
-                                        x1
-                                    </span>
-                                    </li>
-                                @endforeach
-                            @else
-                                نداری
-                            @endif
-                            <ul class="woocommerce-mini-cart cart_list product_list_widget ">
-
-                            </ul>
-                            <p class="woocommerce-mini-cart__total total">
-                                <strong>Subtotal:</strong>
-                                <span class="woocommerce-Price-amount amount">
-											<span class="woocommerce-Price-currencySymbol">$</span>102
-										</span>
-                            </p>
-                            <p class="woocommerce-mini-cart__total total">
-                                <strong>Total:</strong>
-                                <span class="woocommerce-Price-amount amount color-cdaa7c">
-                                    <span class="woocommerce-Price-currencySymbol">$</span>102
-                                </span>
-                            </p>
-                            <p class="woocommerce-mini-cart__buttons buttons">
-                                <a href="#" class="button wc-forward view-cart">View cart</a>
-                                <a href="#" class="button checkout wc-forward">Checkout</a>
-                            </p>
+                    @if(auth()->check())
+                        @if($user->cart)
+                            @php
+                                $totalPrice = 0;
+                                $cart = $user->cart->first();
+                            @endphp
+                            <span class="notify-amount">{{ $cart->items->count() }}</span>
+                            <div id="woocommerce_widget_cart-2" class="widget woocommerce widget_shopping_cart">
+                                <div class="widget_shopping_cart_content">
+                                    <ul class="woocommerce-mini-cart cart_list product_list_widget ">
+                                        <h5 class="text-right text-white rtl">سبد خرید رستوران: {{ $cart->shop->title }}</h5>
+                                        @foreach($cart->items as $item)
+                                            @php
+                                            $totalPrice += $item->food->price*$item->quantity;
+                                            @endphp
+                                            <li class="woocommerce-mini-cart-item mini_cart_item clearfix rtl text-right">
+                                                <a href="#" class="remove remove_from_cart_button text-left" aria-label="Remove this item">
+                                                    <span class="lnr lnr-cross-circle"></span>
+                                                </a>
+                                                <a href="#" class="image-holder">
+{{--                                                    <img src="{{ url(env('FOOD_IMAGE_UPLOAD_PATH')) . '/' . $item->food->primary_image }}" class="attachment-shop_thumbnail size-shop_thumbnail wp-post-image" alt="">--}}
+                                                    <span class="product-name">{{ $item->food->title }} - {{ $item->food->shop->title }}</span>
+                                                </a>
+                                                <span class="quantity">
+                                                <span class="woocommerce-Price-amount amount">
+                                                    <span class="woocommerce-Price-currencySymbol">
+                                                        {{ number_format($item->food->price) }}
+                                                        <img src="/home/images/toman.png" height="25" alt="تومان">
+                                                    </span>
+                                                </span>
+                                                {{ $item->quantity }}x
+                                            </span>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                    <p class="woocommerce-mini-cart__total total rtl text-right">
+                                        <strong>قیمت کل:</strong>
+                                        {{ number_format($totalPrice) }}
+                                    </p>
+                                    <p class="woocommerce-mini-cart__buttons buttons">
+                                        <a href="{{ route('home.cart.checkout', ['shop_id' => $cart->shop_id]) }}" class="button wc-forward view-cart">ثبت سفارش</a>
+                                    </p>
+                                </div>
+                            </div>
+                        @else
+                            <div id="woocommerce_widget_cart-2" class="widget woocommerce widget_shopping_cart">
+                                <div class="widget_shopping_cart_content">
+                                    <div class="alert alert-secondary w-100">سبد شما خالی است!</div>
+                                </div>
+                            </div>
+                        @endif
+                    @else
+                        <div id="woocommerce_widget_cart-2" class="widget woocommerce widget_shopping_cart">
+                            <div class="widget_shopping_cart_content">
+                                <div class="alert alert-secondary w-100">لطفا اول وارد شوید</div>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
                 <span class="lnr lnr-magnifier search-icon" data-toggle="modal" data-target="#modalSearch"></span>
                 <button class="au-btn round au-btn--hover has-bg">ورود | <i class="fa fa-sign-in-alt"></i> </button>

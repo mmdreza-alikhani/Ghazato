@@ -5,10 +5,7 @@
 @endphp
 
 @php
-//    if (auth()->check()){
-//        $cart = \App\Models\Cart::where('user_id', '=', auth()->user()->id)->first();
-//        dd($cart);
-//    }
+//dd(\Illuminate\Support\Facades\Session::get('cart', []))
 @endphp
 
 @section('title', $food->title)

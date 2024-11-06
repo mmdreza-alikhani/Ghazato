@@ -646,7 +646,8 @@ select {
   .au-btn.extra-long {
     width: 208px; }
   .au-btn.round {
-    border-radius: 21px; }
+    /*border-radius: 21px; */
+  }
   .au-btn.has-bd {
     border: 1px solid rgba(255, 255, 255, 0.5); }
     .au-btn.has-bd.bd-999 {
@@ -1231,7 +1232,7 @@ select {
       margin-right: 0; }
       .widget_shopping_cart_content ul.woocommerce-mini-cart li .remove {
         position: absolute;
-        right: 0;
+        left: 0;
         top: 7px;
         color: #cdaa7c;
         font-size: 14px; }
@@ -6949,7 +6950,7 @@ html:not([dir=rtl]) .noUi-horizontal .noUi-handle {
       color: #cdaa7c; }
   .checkout-page .woocommerce-info img {
     vertical-align: baseline;
-    margin-right: 12px; }
+    margin-left: 12px; }
 .checkout-page .checkout_coupon {
   -webkit-display: flex;
   -moz-display: flex;

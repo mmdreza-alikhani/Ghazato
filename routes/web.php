@@ -24,6 +24,7 @@ use Modules\Admin\User\app\Http\Controllers\UserController as AdminUserControlle
 use Modules\Home\Cart\app\Http\Controllers\CartController;
 use Modules\Home\Food\app\Http\Controllers\FoodController;
 use Modules\Home\Main\app\Http\Controllers\MainController;
+use Modules\Home\Profile\app\Http\Controllers\AddressController;
 use Modules\Home\Profile\app\Http\Controllers\ProfileController;
 use Modules\Home\Shop\app\Http\Controllers\ShopController;
 use Modules\Home\Reservation\app\Http\Controllers\ReservationController;
@@ -70,7 +71,7 @@ Route::prefix('/')->name('home.')->group(function (){
     // END: FOODS
 
     // PROFILE
-    Route::prefix('profile/')->name('profile.')->group(function (){
+    Route::prefix('profile/')->middleware('auth')->name('profile.')->group(function (){
         Route::get('', [ProfileController::class , 'info'])->name('index');
         Route::get('info',[ProfileController::class , 'info'])->name('info');
         Route::post('update/{user}',[ProfileController::class , 'update'])->middleware('throttle:3,1')->name('update');
@@ -79,12 +80,11 @@ Route::prefix('/')->name('home.')->group(function (){
         Route::get('bookmarks',[ProfileController::class , 'bookmarks'])->name('bookmarks');
         Route::get('comments',[ProfileController::class , 'comments'])->name('comments');
         Route::prefix('addresses/')->name('addresses.')->group(function (){
-            Route::get('',[HomeProfileAddressesController::class , 'index'])->name('index');
-            Route::get('create',[HomeProfileAddressesController::class , 'create'])->name('create');
-            Route::post('store',[HomeProfileAddressesController::class , 'store'])->name('store');
-            Route::get('{address}/edit',[HomeProfileAddressesController::class , 'edit'])->name('edit');
-            Route::put('{address}/update',[HomeProfileAddressesController::class , 'update'])->name('update');
-            Route::delete('{address}/delete',[HomeProfileAddressesController::class , 'destroy'])->name('destroy');
+            Route::get('',[AddressController::class , 'index'])->name('index');
+            Route::get('create',[AddressController::class , 'create'])->name('create');
+            Route::post('store',[AddressController::class , 'store'])->name('store');
+            Route::put('{user_address}/update',[AddressController::class , 'update'])->name('update');
+            Route::delete('{user_address}/delete',[AddressController::class , 'destroy'])->name('destroy');
         });
         Route::get('resetPassword',[ProfileController::class , 'resetPassword'])->name('resetPassword');
         Route::post('resetPasswordCheck',[ProfileController::class , 'resetPasswordCheck'])->middleware('throttle:3,1')->name('resetPasswordCheck');
@@ -97,6 +97,10 @@ Route::prefix('/')->name('home.')->group(function (){
     Route::post('add-to-cart', [CartController::class , 'add'])->name('cart.add');
     Route::get('remove-from-cart/{rowId}', [CartController::class , 'remove'])->name('cart.remove');
     Route::get('clear-cart', [CartController::class , 'clear'])->name('cart.clear');
+    Route::prefix('cart/')->middleware('auth')->name('cart.')->group(function (){
+        Route::post('{shop:slug}/checkCoupon', [CartController::class , 'checkCoupon'])->name('checkCoupon');
+        Route::get('{shop_id}/checkout', [CartController::class , 'checkout'])->name('checkout');
+    });
     // END: CART
 
 });

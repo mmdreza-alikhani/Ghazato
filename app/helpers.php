@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Cart;
 use App\Models\Coupon;
 use App\Models\Order;
 use Carbon\Carbon;
@@ -102,21 +103,22 @@ function cartTotalDeliveryAmount() {
     return $cartTotalDeliveryAmount;
 }
 
-function checkCoupon($code): array
+function checkCoupon($code, $shop_id): array
 {
-    $coupon = Coupon::where('code', $code)->where('expired_at', '>', Carbon::now())->first();
+    $cart = Cart::where('shop_id', $shop_id)->where('user_id', auth()->user()->id)->first();
+    $coupon = Coupon::where('code', '=', $code)->where('expired_at', '>', Carbon::now())->first();
     if ($coupon == null){
         session()->forget('coupon');
         return ['error' => 'کد تخفیف وارد شده صحیح نمیباشد!'];
     }
-    if (Order::where('user_id', auth()->id())->where('coupon_id', $coupon->id)->where('payment_status', 1)->exists()){
+    if (Cart::where('user_id', auth()->id())->where('coupon_id', $coupon->id)->exists()){
         session()->forget('coupon');
         return ['error' => 'شما قبلا از این کد تخفیف استفاده کرده اید!'];
     }
     if ($coupon->getRawOriginal('type') == 'amount'){
         session()->put('coupon', ['code' => $coupon->code,'id' => $coupon->id, 'amount' => $coupon->amount]);
     }else{
-        $total = \Cart::getTotal();
+        $total = $cart->calculateTotalPrice();
         $amount = (($total * $coupon->percentage) / 100) > $coupon->max_percentage_amount ? $coupon->max_percentage_amount : (($total * $coupon->percentage) / 100);
         session()->put('coupon', ['code' => $coupon->code,'id' => $coupon->id, 'amount' => $amount]);
     }

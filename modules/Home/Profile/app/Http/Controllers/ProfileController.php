@@ -51,7 +51,7 @@ class ProfileController extends Controller
             if ($request->avatar) {
                 $avatarName = generateFileName($request->avatar->getClientOriginalName());
 //                $resized = $manager->read($request->avatar)->resize(100,100)->save(storage_path(env('USER_AVATAR_UPLOAD_PATH')) , $avatarName);
-                $request->avatar->move(storage_path(env('USER_AVATAR_UPLOAD_PATH')) , $avatarName);
+                $request->avatar->storeAs('/public/users/avatars', $avatarName);
                 $user->update([
                     'avatar' => $avatarName
                 ]);

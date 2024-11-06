@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -50,6 +51,11 @@ class User extends Authenticatable
     public function rates(): HasMany
     {
         return $this->hasMany(FoodRate::class);
+    }
+
+    public function cart(): HasMany
+    {
+        return $this->hasMany(Cart::class);
     }
 
     public function comments(): HasMany
