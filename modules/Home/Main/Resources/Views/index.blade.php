@@ -179,12 +179,12 @@
                         <div class="inner">
                             <div class="heading">
                                 <h2>Our Story</h2>
-                                <img src="/home/images/border.png" alt="">
+                                <img src="{{ asset('assets/home/images/border.png') }}" alt="">
                             </div>
                             <div class="body">
                                 <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit</p>
                                 <div class="end">
-                                    <img src="/home/images/signature.png" alt="">
+                                    <img src="{{ asset('assets/home/images/signature.png') }}" alt="">
                                     <div class="name">
                                         <h6>
                                             <a href="#">Harry Price</a>
@@ -199,7 +199,7 @@
                 </div>
                 <div class="col-lg-6 col-xl-6 px-0 order-1 order-lg-2">
                     <div class="image-holder">
-                        <img src="/home/images/our-story.jpg" alt="">
+                        <img src="{{ asset('assets/home/images/our-story.jpg') }}" alt="">
                     </div>
                 </div>
             </div>
@@ -219,7 +219,7 @@
                             <div class="heading">
                                 <h3 style="float: right; font-family: Vazir-Medium">{{ $category->title }}</h3>
                                 <span class="icon">
-                                    <img src="/home/images/{{ $category->icon}}" alt="{{ $category->title . '-image' }}">
+                                    <img src="{{ asset('assets/home/images/' . $category->icon) }}" alt="{{ $category->title . '-image' }}">
                                 </span>
                             </div>
                             <div class="body">
@@ -230,7 +230,7 @@
                                         <span class="dots"></span>
                                         <span class="price px-1">
                                             <span class="currency-symbol">
-                                                <img src="/home/images/toman.png" height="25">
+                                                <img src="{{ asset('assets/home/images/toman.png') }}" height="25" alt="تومان">
                                             </span>
                                             <span class="number">{{ number_format($food->price) }}</span>
                                         </span>
@@ -432,7 +432,7 @@
             </div>
             <div class="item">
                 <div class="image-holder">
-                    <img src='/home/images/image-slide-3.jpg' alt="">
+                    <img src='{{ asset('assets/home/images/image-slide-3.jpg') }}' alt="">
                     <div class="inner">
                         <div class="item-info">
                             <h4>

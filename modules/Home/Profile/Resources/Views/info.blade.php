@@ -41,12 +41,12 @@
                 <div class="input-group mb-3">
                     <input type="tel" class="form-control" minlength="10" maxlength="10" placeholder="9121234567" id="phone_number" value="{{ $user->phone_number }}" name="phone_number">
                     <div class="input-group-append">
-                        <span class="input-group-text">+98</span>
+                        <span class="input-group-text">98+</span>
                     </div>
                 </div>
                 <label for="last_name">ایمیل:</label>
                 @if($user->email_verified_at == null)
-                    <i class="fa fa-times-circle text-danger">ایمیل شما تایید نشده!</i>
+                    ایمیل شما تایید نشده!<i class="fa fa-times-circle text-danger"></i>
                 @else
                     <i class="fa fa-check-circle text-success"></i>
                 @endif
@@ -58,4 +58,16 @@
             </div>
         </form>
     </div>
+@endsection
+@section('scripts')
+    <script>
+        function loadFile(event) {
+            var output = document.getElementById('output');
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function() {
+                URL.revokeObjectURL(output.src) // Free memory
+            }
+        }
+
+    </script>
 @endsection

@@ -3,7 +3,7 @@
 @section('title', 'پروفایل')
 
 @section('content')
-    <section class="page-info set-bg" data-bg="/home/images/shop-bg.jpeg">
+    <section class="page-info set-bg" data-bg="{{ asset('assets/home/images/shop-bg.jpeg') }}">
         <div class="section-header">
             <h1 class="text-white">{{ $user->username }}</h1>
             <span>~ @yield('profile_title') ~</span>

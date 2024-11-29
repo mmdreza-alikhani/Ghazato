@@ -30,7 +30,7 @@
                     </div>
                 </div>
             </li>
-            <li class="nav-item"> <img src="/admin/img/user-profile.jpg" alt="..." class="rounded-circle screen-user-profile"></li>
+            <li class="nav-item"> <img src="{{ asset('assets/admin/img/user-profile.jpg') }}" alt="..." class="rounded-circle screen-user-profile"></li>
             <li class="nav-item">
                 <div class="dropdown">
                     <button class="btn  dropdown-toggle m-0" type="button" id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

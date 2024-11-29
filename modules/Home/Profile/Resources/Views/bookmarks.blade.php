@@ -14,11 +14,11 @@
         @foreach($user->bookmarkedFoods as $food)
             <div class="menu-item w-100">
                 <h5>
-                    <a href="{{ route('home.foods.show', ['food' => $food->slug]) }}">{{ $food->title }}</a>
+                    <a href="{{ route('home.foods.show', ['food' => $food->slug]) }}" style="font-family: Vazir-SemiBold">{{ $food->title }}</a>
                     <span class="dots"></span>
                     <span class="price px-1">
                     <span class="currency-symbol">
-                        <img src="/home/images/toman.png" height="25">
+                        <img src="{{ asset('assets/home/images/toman.png') }}" height="25" alt="تومان">
                     </span>
                     <span class="number">{{ number_format($food->price) }}</span>
                 </span>

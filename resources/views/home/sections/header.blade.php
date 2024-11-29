@@ -6,7 +6,7 @@
     <nav class="navbar-desktop">
         <div class="left">
             <a href="{{ route('home.index') }}" class="logo">
-                <img src="/home/images/logo.png" alt="Royate">
+                <img src="{{ asset('assets/home/images/logo.png') }}" alt="Royate">
             </a>
         </div>
         <ul>
@@ -49,7 +49,7 @@
         <div class="right">
             <div class="action">
                 <div class="notify">
-                    <img style="color: #FFF" height="20" src="/home/images/cart.jpg" alt="">
+                    <img style="color: #FFF" height="20" src="{{ asset('assets/home/images/cart.jpg') }}" alt="">
                     @if(auth()->check())
                         @if(!$user->cart->isEmpty())
                             @php
@@ -104,16 +104,23 @@
                     @else
                         <div id="woocommerce_widget_cart-2" class="widget woocommerce widget_shopping_cart">
                             <div class="widget_shopping_cart_content">
-                                <div class="alert alert-secondary w-100">لطفا اول وارد شوید</div>
+                                <div class="alert alert-secondary w-100 rtl text-right">لطفا اول وارد شوید</div>
                             </div>
                         </div>
                     @endif
                 </div>
                 <span class="lnr lnr-magnifier search-icon" data-toggle="modal" data-target="#modalSearch"></span>
-                <a href="{{ route('login') }}" class="au-btn round au-btn--hover has-bg"><i class="fa fa-sign-in-alt mr-2"></i>
-                |
-                    ورود
-                </a>
+                @if(auth()->check())
+                    <a href="{{ route('home.profile.info') }}" class="au-btn round au-btn--hover has-bg"><i class="fa fa-user mr-2"></i>
+                        |
+                        پروفایل
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="au-btn round au-btn--hover has-bg"><i class="fa fa-sign-in-alt mr-2"></i>
+                        |
+                        ورود
+                    </a>
+                @endif
             </div>
         </div>
     </nav>
