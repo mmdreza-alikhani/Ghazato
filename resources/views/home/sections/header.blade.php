@@ -5,7 +5,7 @@
     <!-- HEADER ON DESKTOP -->
     <nav class="navbar-desktop">
         <div class="left">
-            <a href="index.blade.php" class="logo">
+            <a href="{{ route('home.index') }}" class="logo">
                 <img src="/home/images/logo.png" alt="Royate">
             </a>
         </div>
@@ -51,7 +51,7 @@
                 <div class="notify">
                     <img style="color: #FFF" height="20" src="/home/images/cart.jpg" alt="">
                     @if(auth()->check())
-                        @if($user->cart)
+                        @if(!$user->cart->isEmpty())
                             @php
                                 $totalPrice = 0;
                                 $cart = $user->cart->first();
@@ -110,7 +110,10 @@
                     @endif
                 </div>
                 <span class="lnr lnr-magnifier search-icon" data-toggle="modal" data-target="#modalSearch"></span>
-                <button class="au-btn round au-btn--hover has-bg">ورود | <i class="fa fa-sign-in-alt"></i> </button>
+                <a href="{{ route('login') }}" class="au-btn round au-btn--hover has-bg"><i class="fa fa-sign-in-alt mr-2"></i>
+                |
+                    ورود
+                </a>
             </div>
         </div>
     </nav>
